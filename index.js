@@ -1,12 +1,17 @@
 'use strict';
 
 exports.register = (server, opts, next) => {
-
-  if (!opts.collections || !opts.collections.length || typeof server.plugins['hapi-mongodb'] !== 'object') {
+  if (!opts.collections || !opts.collections.length) {
     return next();
   }
 
-  const db = server.plugins['hapi-mongodb'].db;
+  let db;
+
+  if (server.mongo && typeof server.mongo.db === 'object') {
+    db = server.mongo.db;
+  } else {
+    db = server.plugins['hapi-mongodb'].db;
+  }
 
   opts.collections.forEach(item => {
     const collection = db.collection(item);
