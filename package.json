@@ -1,0 +1,20 @@
+{
+  "name": "hapi-mongodb-collections",
+  "version": "1.0.0",
+  "description": "Helper for hapi-mongodb to decorate server object with collections",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "First+Third",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.4.0",
+    "eslint-config-firstandthird": "^3.0.2",
+    "eslint-plugin-import": "^1.14.0",
+    "hapi": "^15.1.1",
+    "hapi-mongodb": "^6.2.0",
+    "mocha": "^3.1.2"
+  }
+}
