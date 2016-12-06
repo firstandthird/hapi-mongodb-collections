@@ -4,7 +4,7 @@ const chai = require('chai');
 const assert = chai.assert;
 const Hapi = require('hapi');
 
-const launchServer = (server, port, mongoOpts, done) => {
+const launchServer = (server, port, mongoOpts, pluginOpts, done) => {
   server.connection({ port });
   server.register([
     {
@@ -13,9 +13,7 @@ const launchServer = (server, port, mongoOpts, done) => {
     },
     {
       register: require('../'),
-      options: {
-        collections: ['testcollection']
-      }
+      options: pluginOpts
     }
   ], (err) => {
     if (err) {
@@ -37,11 +35,14 @@ const mongoOpts = {
   url: 'mongodb://localhost:27017',
   decorate: undefined
 };
+const pluginOpts = {
+  collections: ['testcollection']
+}
 
 describe('hapi-mongodb-collections', () => {
   before(done => {
     server = new Hapi.Server();
-    launchServer(server, port, mongoOpts, done);
+    launchServer(server, port, mongoOpts, pluginOpts, done);
   });
 
   after(done => {
@@ -59,12 +60,33 @@ describe('hapi-mongodb-collections decorated', () => {
   before(done => {
     server = new Hapi.Server();
     mongoOpts.decorate = true;
-    launchServer(server, port, mongoOpts, done);
+    launchServer(server, port, mongoOpts, pluginOpts, done);
+  });
+  after(done => {
+    server.stop(done);
   });
 
   it('should work', done => {
     assert(typeof server.testcollection === 'object', 'Collection exists');
     assert(typeof server.testcollection.find === 'function', 'Has functions');
+    done();
+  });
+});
+
+describe('hapi-mongodb-collections namespace', () => {
+  before(done => {
+    server = new Hapi.Server();
+    mongoOpts.decorate = true;
+    pluginOpts.namespace = 'dbCollections';
+    launchServer(server, port, mongoOpts, pluginOpts, done);
+  });
+  after(done => {
+    server.stop(done);
+  });
+
+  it('should be able to specify a namespace', done => {
+    assert(typeof server.dbCollections.testcollection === 'object', 'Collection exists');
+    assert(typeof server.dbCollections.testcollection.find === 'function', 'Has functions');
     done();
   });
 });
