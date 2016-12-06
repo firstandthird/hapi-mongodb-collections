@@ -17,7 +17,9 @@ exports.register = (server, opts, next) => {
     if (!opts.namespace) {
       server.decorate('server', item, collection);
     } else {
-      server.decorate('server', opts.namespace, {});
+      if (!server[opts.namespace]) {
+        server.decorate('server', opts.namespace, {});
+      }
       server[opts.namespace][item] = collection;
     }
   });

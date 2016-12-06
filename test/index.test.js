@@ -37,7 +37,7 @@ const mongoOpts = {
 };
 const pluginOpts = {
   collections: ['testcollection']
-}
+};
 
 describe('hapi-mongodb-collections', () => {
   before(done => {
@@ -78,6 +78,8 @@ describe('hapi-mongodb-collections namespace', () => {
     server = new Hapi.Server();
     mongoOpts.decorate = true;
     pluginOpts.namespace = 'dbCollections';
+    pluginOpts.collections = ['stamps', 'rocks'];
+
     launchServer(server, port, mongoOpts, pluginOpts, done);
   });
   after(done => {
@@ -85,8 +87,9 @@ describe('hapi-mongodb-collections namespace', () => {
   });
 
   it('should be able to specify a namespace', done => {
-    assert(typeof server.dbCollections.testcollection === 'object', 'Collection exists');
-    assert(typeof server.dbCollections.testcollection.find === 'function', 'Has functions');
+    assert(typeof server.dbCollections.stamps === 'object', 'Collection exists');
+    assert(typeof server.dbCollections.rocks === 'object', 'Multiple collections can be in same namespace');
+    assert(typeof server.dbCollections.stamps.find === 'function', 'Has functions');
     done();
   });
 });
