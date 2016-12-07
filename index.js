@@ -12,12 +12,17 @@ exports.register = (server, opts, next) => {
   } else {
     db = server.plugins['hapi-mongodb'].db;
   }
-
   opts.collections.forEach(item => {
     const collection = db.collection(item);
-    server.decorate('server', item, collection);
+    if (!opts.namespace) {
+      server.decorate('server', item, collection);
+    } else {
+      if (!server[opts.namespace]) {
+        server.decorate('server', opts.namespace, {});
+      }
+      server[opts.namespace][item] = collection;
+    }
   });
-
   next();
 };
 
