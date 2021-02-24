@@ -29,7 +29,7 @@ with the server.  Then register hapi-mongodb-collections and specify the collect
 ```javascript
 const plugin = require('hapi-mongodb-collections');
 await server.register({
-  plugin: require('../'),
+  plugin,
   options: {
     collections: [
       'myCoinCollection',
